@@ -33,9 +33,9 @@ namespace ImageToDatabase
                     using (var br = new BinaryReader(fs))
                     {
                         var useraccount = new user_profile();
-                        
-                        
-                        
+
+
+
                         byte[] newImage = br.ReadBytes((Int32)fs.Length);
                         useraccount.screenshot = newImage;
 
@@ -53,7 +53,23 @@ namespace ImageToDatabase
 
         protected void btn_display_image_Click(object sender, EventArgs e)
         {
+            int imageId = 1; // Replace this with the actual ID of the image you want to retrieve from the database
+            byte[] imageData = GetImageData(imageId);
+            string base64Image = Convert.ToBase64String(imageData);
+            image.ImageUrl = "data:image/png;base64," + base64Image;
+            
+        }
 
+        private byte[] GetImageData(int imageId)
+        {
+            using (var db = new usersEntities())
+            {
+                var imageRecord = db.user_profile.FirstOrDefault(record => record.Id == imageId);
+                return imageRecord.screenshot;
+
+            }
+
+            return null;
         }
     }
 }
