@@ -53,7 +53,32 @@ namespace ImageToDatabase
 
         protected void btn_display_image_Click(object sender, EventArgs e)
         {
+protected void PhoneMessage()
+        {
+            // code source - https://www.twilio.com/docs/sms
 
+            // this is code used in Unit-6 D2 implementation of improvements
+
+
+            
+            var database = new HelpdeskEntities(); // creates a new instance of the database
+            int userID = (int)Session["UserID"]; // gets the users ID from the session
+            var userAccount = database.UserAccounts.FirstOrDefault(dbRecord => dbRecord.UserID == userID); // gets the users account from the database
+            var userPhoneNumber = userAccount.PhoneNumber; // gets the users phone number from the database
+            var userFirstName = userAccount.FirstName; // gets the users first name from the database
+            string accountSID = ""; // 
+            string authToken = "";
+
+            TwilioClient.Init(accountSID, authToken); // initialises the twilio client
+            var TextMessage = new CreateMessageOptions(new PhoneNumber("+44" + userPhoneNumber)); // creates a new message
+             TextMessage.From = new PhoneNumber("+16206088321"); // sets the from number
+             TextMessage.Body = $"Hi {userFirstName}!, Your ticket has been created and is now under investigation, Please Login to the system to view the ticket"; // sets the message body
+             var sendMessage = MessageResource.Create(TextMessage); // sends the message
+             Console.WriteLine(sendMessage.Body); // prints the message to the console
+
+
+
+        }
         }
     }
 }
